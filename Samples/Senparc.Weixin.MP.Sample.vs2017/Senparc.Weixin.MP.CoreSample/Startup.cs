@@ -30,6 +30,8 @@ namespace Senparc.Weixin.MP.CoreSample
             Configuration = configuration;
         }
 
+   
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -50,6 +52,13 @@ namespace Senparc.Weixin.MP.CoreSample
 
             services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
                     .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +67,7 @@ namespace Senparc.Weixin.MP.CoreSample
             //引入EnableRequestRewind中间件
             app.UseEnableRequestRewind();
             app.UseSession();
+            app.UseCors("MyPolicy");
 
             if (env.IsDevelopment())
             {

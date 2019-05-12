@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace Senparc.Weixin.MP.CoreSample.Controllers
 {
@@ -19,10 +22,21 @@ namespace Senparc.Weixin.MP.CoreSample.Controllers
         private string appId = Config.SenparcWeixinSetting.WeixinAppId;
         private string appSecret = Config.SenparcWeixinSetting.WeixinAppSecret;
 
+        [EnableCors("MyPolicy")]
+        public ActionResult Index(string url,string callback)
+        {
+
+            
+            var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(appId, appSecret, url);
+
+           
+
+            return Content($"{callback}({ JsonConvert.SerializeObject(jssdkUiPackage)})");
+        }
         //
         // GET: /JSSDK/
 
-        public ActionResult Index()
+        public ActionResult Test()
         {
             #region v13.6.4之前的写法
             ////获取时间戳
